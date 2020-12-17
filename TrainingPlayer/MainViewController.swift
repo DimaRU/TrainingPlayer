@@ -26,8 +26,11 @@ class MainViewController: NSViewController {
         return formater
     }()
     
-    private var playerList: TrainingPlayerList?
+    private var playList: TrainingPlayerList?
     private var currentItem: Int = 0
+    private var currentTrack: Int?
+    private var timer: Timer?
+    private var secondsCount: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,10 +41,24 @@ class MainViewController: NSViewController {
         setupOverlay()
     }
     
-    @IBAction func startButtonPress(_ sender: NSToolbarItem) {
-        guard let playerList = playerList else { return }
-        let item = playerList.items[currentItem]
-        playVideo(playerList.videoPaths[item.trackNumber], item: item)
+    @IBAction func openMenuAction(_ sender: Any) {
+        let panel = NSOpenPanel()
+        panel.allowsMultipleSelection = false
+        panel.canChooseDirectories = false
+        panel.canChooseFiles = true
+        panel.allowedFileTypes = ["json"]
+        panel.title = "Choose training playlist"
+        let response = panel.runModal()
+        guard
+            response == .OK,
+            let url = panel.url
+        else { return }
+        loadPlayList(url: url)
+    }
+    
+    @IBAction func startButtonPress(_ sender: Any?) {
+        currentItem = 0
+        playVideo()
     }
     
     @IBAction func pauseButtonPress(_ sender: Any) {
@@ -55,6 +72,17 @@ class MainViewController: NSViewController {
         view.window?.toolbar = toolbar
     }
 
+    private func loadPlayList(url: URL) {
+        guard
+            let playlistData = try? Data(contentsOf: url)
+        else { return }
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(dateFormater)
+        playList = try? decoder.decode(TrainingPlayerList.self, from: playlistData)
+        Preferences.playListURL = url
+        startButtonPress(nil)
+    }
+    
     private func setupOverlay() {
         guard
             let contentOverlayView = playerView.contentOverlayView
@@ -73,16 +101,44 @@ class MainViewController: NSViewController {
         ])
     }
 
-    private func playVideo(_ file: String, item: TrainingPlayerList.Item) {
-        let videoURL = URL(fileURLWithPath: file)
+    private func playVideo() {
+        guard
+            let playList = playList,
+            currentItem < playList.items.count
+        else { return }
+        let item = playList.items[currentItem]
+        if currentTrack != item.track {
+            currentTrack = item.track
+            let filePath = playList.videoPaths[item.track]
+            let videoURL = URL(fileURLWithPath: filePath)
+            playerView.player = AVPlayer(url: videoURL)
+        }
         let oneSecond = CMTime(value: 1, timescale: 10)
-        playerView.player = AVPlayer(url: videoURL)
         observerToken = playerView.player?.addBoundaryTimeObserver(forTimes: [NSValue(time: item.endTime.cmtime)], queue: nil) {
             self.playerView.player?.seek(to: item.beginTime.cmtime, toleranceBefore: oneSecond, toleranceAfter: oneSecond)
         }
         self.playerView.player?.seek(to: item.beginTime.cmtime, toleranceBefore: oneSecond, toleranceAfter: oneSecond) { _ in
             self.playerView.player?.rate = 1
         }
-        
+        secondsCount = item.playTime.seconds
+        showSecondsCount()
+        self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            self.secondsCount -= 1
+            self.showSecondsCount()
+            guard self.secondsCount > 0 else { return }
+            if self.playerView.player?.rate ?? 0 == 0 {
+                self.currentItem += 1
+                self.timer?.invalidate()
+                self.playVideo()    // Next video in playlist
+            } else {
+                self.secondsCount = item.pauseTime.seconds
+                self.playerView.player?.pause()
+            }
+        }
+    }
+    
+    private func showSecondsCount() {
+        let secondString = String(format: "%d:%2d", secondsCount/60, secondsCount % 60)
+        textLabel.stringValue = secondString
     }
 }

@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct Preference {
-    @UserPreference("PlayListFile")
-    static var playListFile: CGFloat?
+struct Preferences {
+    @UserPreference("PlayListURL")
+    static var playListURL: URL?
 }

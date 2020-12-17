@@ -9,7 +9,7 @@ import Foundation
 
 struct TrainingPlayerList: Decodable {
     struct Item: Codable {
-        let trackNumber: Int
+        let track: Int
         let beginTime: Date
         let endTime: Date
         let playTime: Date
