@@ -8,9 +8,6 @@
 import Cocoa
 import AVKit
 
-let videoPathString1 = "/Users/dmitry/Movies/Реабилитация, ЛФК плечевого сустава 1.mp4"
-let videoPathString2 = "/Users/dmitry/Movies/Реабилитация, ЛФК плечевого сустава 2.mp4"
-
 class MainViewController: NSViewController {
     @IBOutlet weak var playerView: AVPlayerView!
     @IBOutlet var toolbar: NSToolbar!
@@ -183,8 +180,6 @@ class MainViewController: NSViewController {
             var isStale = false
             let url = try URL(resolvingBookmarkData: bookmarkData, options: .withSecurityScope, relativeTo: nil, bookmarkDataIsStale: &isStale)
             if isStale {
-                // bookmarks could become stale as the OS changes
-                print("Bookmark is stale, need to save a new one... ")
                 saveBookmarkData(for: url)
             }
             return url
