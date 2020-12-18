@@ -6,6 +6,6 @@
 import Foundation
 
 struct Preferences {
-    @UserPreference("PlayListURL")
-    static var playListURL: URL?
+    @UserPreference("PlayListBookmark")
+    static var playListBookmark: Data?
 }
