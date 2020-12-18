@@ -69,7 +69,9 @@ class MainViewController: NSViewController {
             playerView.player?.pause()
             timer?.invalidate()
         } else {
-            playerView.player?.rate = 1
+            if observerToken != nil {
+                playerView.player?.rate = 1
+            }
             timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
                 self.onEachSecond()
             }
@@ -87,16 +89,17 @@ class MainViewController: NSViewController {
         defer {
             url.stopAccessingSecurityScopedResource()
         }
-        guard
-            let playlistData = try? Data(contentsOf: url)
-        else { return }
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .formatted(dateFormater)
-        playList = try? decoder.decode(TrainingPlayerList.self, from: playlistData)
-        saveBookmarkData(for: url)
-
-        currentItem = 0
-        playVideo()
+        do {
+            let playlistData = try Data(contentsOf: url)
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .formatted(dateFormater)
+            playList = try decoder.decode(TrainingPlayerList.self, from: playlistData)
+            saveBookmarkData(for: url)
+            currentItem = 0
+            playVideo()
+        } catch {
+            print(error)
+        }
     }
     
     private func setupOverlay() {
@@ -154,7 +157,14 @@ class MainViewController: NSViewController {
             currentItem += 1
             playVideo()    // Next video in playlist
         } else {
-            secondsCount = playList!.items[currentItem].pauseTime.seconds
+            if let observerToken = observerToken {
+                playerView.player?.removeTimeObserver(observerToken)
+                self.observerToken = nil
+            }
+            secondsCount = playList!.items[currentItem].pauseTime
+            if secondsCount == 0 {
+                secondsCount = 5
+            }
             playerView.player?.pause()
         }
     }
