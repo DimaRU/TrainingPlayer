@@ -11,9 +11,10 @@ import AVKit
 class MainViewController: NSViewController {
     @IBOutlet weak var playerView: AVPlayerView!
     @IBOutlet var toolbar: NSToolbar!
+    @IBOutlet weak var textLabel: NSTextField!
+    @IBOutlet weak var timeLabel: NSTextField!
 
     private var observerToken: Any?
-    private var textLabel: NSTextField = NSTextField()
     let dateFormater: DateFormatter = {
         let formater = DateFormatter()
         formater.locale = .current
@@ -31,7 +32,6 @@ class MainViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        textLabel.translatesAutoresizingMaskIntoConstraints = false
     }
     
     override func viewDidAppear() {
@@ -95,29 +95,24 @@ class MainViewController: NSViewController {
             decoder.dateDecodingStrategy = .formatted(dateFormater)
             playList = try decoder.decode(TrainingPlayerList.self, from: playlistData)
             saveBookmarkData(for: url)
-            currentItem = 0
-            playVideo()
+            view.window?.title = playList!.title
         } catch {
             print(error)
         }
     }
     
     private func setupOverlay() {
-        guard
-            let contentOverlayView = playerView.contentOverlayView
-        else { return }
-        
-        textLabel.font = .monospacedDigitSystemFont(ofSize: 20, weight: .regular)
+        timeLabel.font = .monospacedDigitSystemFont(ofSize: 24, weight: .regular)
+        timeLabel.textColor = .white
+        timeLabel.stringValue = " "
+        timeLabel.backgroundColor = NSColor.black.withAlphaComponent(0.2)
+        timeLabel.isBordered = false
+
+        textLabel.font = .systemFont(ofSize: 17, weight: .regular)
         textLabel.textColor = .white
         textLabel.stringValue = " "
         textLabel.backgroundColor = NSColor.black.withAlphaComponent(0.2)
         textLabel.isBordered = false
-        contentOverlayView.addSubview(textLabel)
-        NSLayoutConstraint.activate([
-            textLabel.widthAnchor.constraint(equalToConstant: 200),
-            textLabel.topAnchor.constraint(equalTo: contentOverlayView.topAnchor, constant: 15),
-            textLabel.leadingAnchor.constraint(equalTo: contentOverlayView.leadingAnchor, constant: 15)
-        ])
     }
 
     private func playVideo() {
@@ -133,12 +128,15 @@ class MainViewController: NSViewController {
             playerView.player = AVPlayer(url: videoURL)
         }
         let oneSecond = CMTime(value: 1, timescale: 10)
+        print(currentItem, item.beginTime, item.endTime, item.comment)
         observerToken = playerView.player?.addBoundaryTimeObserver(forTimes: [NSValue(time: item.endTime.cmtime)], queue: nil) {
             self.playerView.player?.seek(to: item.beginTime.cmtime, toleranceBefore: oneSecond, toleranceAfter: oneSecond)
         }
-        self.playerView.player?.seek(to: item.beginTime.cmtime, toleranceBefore: oneSecond, toleranceAfter: oneSecond) { _ in
-            self.playerView.player?.rate = 1
-        }
+        self.playerView.player?.seek(to: item.beginTime.cmtime, toleranceBefore: oneSecond, toleranceAfter: oneSecond)
+        self.playerView.player?.rate = 1
+        textLabel.stringValue = "\(currentItem+1)/\(playList.items.count): \(item.comment)"
+        textLabel.invalidateIntrinsicContentSize()
+        
         secondsCount = item.playTime.seconds
         showSecondsCount()
         timer?.invalidate()
@@ -172,7 +170,7 @@ class MainViewController: NSViewController {
     private func showSecondsCount() {
         let seconds = String(format: "%d:%02d", secondsCount/60, secondsCount % 60)
         let state = playerView.player?.rate ?? 0 == 0 ? "Pause" : "Play"
-        textLabel.stringValue = "\(state) ex \(currentItem+1)/\(playList!.items.count) : \(seconds)"
+        timeLabel.stringValue = "\(state): \(seconds)"
     }
     
     private func saveBookmarkData(for file: URL) {

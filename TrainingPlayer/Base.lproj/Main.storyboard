@@ -224,19 +224,43 @@
                         <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <avPlayerView controlsStyle="inline" showsFullScreenToggleButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mS3-ft-kem">
+                            <avPlayerView controlsStyle="floating" showsFullScreenToggleButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mS3-ft-kem">
                                 <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                             </avPlayerView>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="myP-HP-nXx">
+                                <rect key="frame" x="15" y="15" width="46" height="20"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Label" drawsBackground="YES" id="Jn0-Bx-Lgp">
+                                    <font key="font" metaFont="system" size="17"/>
+                                    <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Klz-Lr-zB4">
+                                <rect key="frame" x="15" y="239" width="37" height="16"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Label" drawsBackground="YES" id="S5Q-y4-AlM">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                         <constraints>
+                            <constraint firstItem="Klz-Lr-zB4" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="15" id="9Pl-9D-Wo0"/>
                             <constraint firstItem="mS3-ft-kem" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="MV5-av-FY0"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Klz-Lr-zB4" secondAttribute="trailing" constant="15" id="YIv-az-IeR"/>
+                            <constraint firstItem="myP-HP-nXx" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="15" id="dHe-iX-TvB"/>
+                            <constraint firstItem="Klz-Lr-zB4" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="15" id="dOi-RT-tG8"/>
                             <constraint firstAttribute="bottom" secondItem="mS3-ft-kem" secondAttribute="bottom" id="hPc-t9-rdg"/>
                             <constraint firstAttribute="trailing" secondItem="mS3-ft-kem" secondAttribute="trailing" id="j4w-h6-Gq0"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="myP-HP-nXx" secondAttribute="trailing" constant="15" id="vaa-7D-ay5"/>
+                            <constraint firstAttribute="bottom" secondItem="myP-HP-nXx" secondAttribute="bottom" constant="15" id="x3X-lI-NF3"/>
                             <constraint firstItem="mS3-ft-kem" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="zbV-8Y-iJ3"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="playerView" destination="mS3-ft-kem" id="4fH-GU-rnZ"/>
+                        <outlet property="textLabel" destination="myP-HP-nXx" id="S5S-9J-ayr"/>
+                        <outlet property="timeLabel" destination="Klz-Lr-zB4" id="lSt-tD-Ud7"/>
                         <outlet property="toolbar" destination="9fk-rO-frc" id="9du-L3-ohj"/>
                     </connections>
                 </viewController>

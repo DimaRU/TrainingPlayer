@@ -16,6 +16,7 @@ struct TrainingPlayerList: Decodable {
         let pauseTime: Int
         let comment: String
     }
+    let title: String
     let videoPaths: [String]
     let items: [Item]
 }
