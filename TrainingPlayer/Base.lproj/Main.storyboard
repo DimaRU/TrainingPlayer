@@ -224,7 +224,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <avPlayerView controlsStyle="floating" showsFullScreenToggleButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mS3-ft-kem">
+                            <avPlayerView controlsStyle="none" showsFullScreenToggleButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mS3-ft-kem">
                                 <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                             </avPlayerView>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="myP-HP-nXx">

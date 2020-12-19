@@ -15,7 +15,7 @@ class MainViewController: NSViewController {
     @IBOutlet weak var timeLabel: NSTextField!
 
     private var observerToken: Any?
-    let dateFormater: DateFormatter = {
+    private let dateFormater: DateFormatter = {
         let formater = DateFormatter()
         formater.locale = .current
         formater.dateFormat = "m:ss"
@@ -72,9 +72,7 @@ class MainViewController: NSViewController {
             if observerToken != nil {
                 playerView.player?.rate = 1
             }
-            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-                self.onEachSecond()
-            }
+            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: onEachSecond(_:))
         }
     }
     
@@ -140,18 +138,16 @@ class MainViewController: NSViewController {
         secondsCount = item.playTime.seconds
         showSecondsCount()
         timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            self.onEachSecond()
-        }
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: onEachSecond(_:))
     }
     
-    private func onEachSecond() {
+    private func onEachSecond(_ timer: Timer) {
         secondsCount -= 1
         showSecondsCount()
         guard secondsCount <= 0 else { return }
         if playerView.player?.rate ?? 0 == 0 {
-            timer?.invalidate()
-            timer = nil
+            timer.invalidate()
+            self.timer = nil
             currentItem += 1
             playVideo()    // Next video in playlist
         } else {
@@ -161,9 +157,11 @@ class MainViewController: NSViewController {
             }
             secondsCount = playList!.items[currentItem].pauseTime
             if secondsCount == 0 {
-                secondsCount = 5
+                currentItem += 1
+                playVideo()    // Next video in playlist
+            } else {
+                playerView.player?.pause()
             }
-            playerView.player?.pause()
         }
     }
     
