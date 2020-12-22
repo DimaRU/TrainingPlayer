@@ -146,23 +146,31 @@ class MainViewController: NSViewController {
         showSecondsCount()
         guard secondsCount <= 0 else { return }
         if playerView.player?.rate ?? 0 == 0 {
+            // Pause end
             timer.invalidate()
             self.timer = nil
-            currentItem += 1
-            playVideo()    // Next video in playlist
         } else {
+            // Clip end
             if let observerToken = observerToken {
                 playerView.player?.removeTimeObserver(observerToken)
                 self.observerToken = nil
             }
             secondsCount = playList!.items[currentItem].pauseTime
-            if secondsCount == 0 {
-                currentItem += 1
-                playVideo()    // Next video in playlist
-            } else {
+            if secondsCount != 0 {
                 playerView.player?.pause()
+                return
+            } else {
+                timer.invalidate()
+                self.timer = nil
             }
         }
+        currentItem += 1
+        guard currentItem < playList?.items.count ?? 0 else {
+            textLabel.stringValue = ""
+            timeLabel.stringValue = "End"
+            return
+        }
+        playVideo()    // Next video in playlist
     }
     
     private func showSecondsCount() {
