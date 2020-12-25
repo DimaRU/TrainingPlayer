@@ -100,17 +100,30 @@ class MainViewController: NSViewController {
     }
     
     private func setupOverlay() {
-        timeLabel.font = .monospacedDigitSystemFont(ofSize: 24, weight: .regular)
+        guard
+            let contentOverlayView = playerView.contentOverlayView
+        else { return }
+        timeLabel.font = .monospacedDigitSystemFont(ofSize: 30, weight: .regular)
         timeLabel.textColor = .white
         timeLabel.stringValue = " "
         timeLabel.backgroundColor = NSColor.black.withAlphaComponent(0.2)
         timeLabel.isBordered = false
 
-        textLabel.font = .systemFont(ofSize: 17, weight: .regular)
+        textLabel.font = .systemFont(ofSize: 24, weight: .regular)
         textLabel.textColor = .white
         textLabel.stringValue = " "
         textLabel.backgroundColor = NSColor.black.withAlphaComponent(0.2)
         textLabel.isBordered = false
+        timeLabel.removeFromSuperview()
+        textLabel.removeFromSuperview()
+        contentOverlayView.addSubview(timeLabel)
+        contentOverlayView.addSubview(textLabel)
+        NSLayoutConstraint.activate([
+            timeLabel.topAnchor.constraint(equalTo: contentOverlayView.topAnchor, constant: 15),
+            timeLabel.leadingAnchor.constraint(equalTo: contentOverlayView.leadingAnchor, constant: 15),
+            textLabel.bottomAnchor.constraint(equalTo: contentOverlayView.bottomAnchor, constant: -15),
+            textLabel.leadingAnchor.constraint(equalTo: contentOverlayView.leadingAnchor, constant: 15),
+        ])
     }
 
     private func playVideo() {
@@ -134,8 +147,7 @@ class MainViewController: NSViewController {
         self.playerView.player?.seek(to: item.beginTime.cmtime, toleranceBefore: oneSecond, toleranceAfter: oneSecond)
         self.playerView.player?.rate = 1
         textLabel.stringValue = "\(currentItem+1)/\(playList.items.count): \(item.comment)"
-        textLabel.invalidateIntrinsicContentSize()
-        
+    
         secondsCount = item.playTime.seconds
         if secondsCount == 0 {
             secondsCount = Int(item.endTime.timeIntervalSince(item.beginTime))
