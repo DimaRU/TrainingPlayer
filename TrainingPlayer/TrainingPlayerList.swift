@@ -13,10 +13,12 @@ struct TrainingPlayerList: Decodable {
         let beginTime: Date
         let endTime: Date
         let playTime: Date
-        let pauseTime: Int
+        let pause: Bool
         let comment: String
     }
     let title: String
     let videoPaths: [String]
+    let pauseTime: Int
+    let playFactor: Float
     let items: [Item]
 }

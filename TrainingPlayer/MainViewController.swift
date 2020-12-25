@@ -125,6 +125,7 @@ class MainViewController: NSViewController {
             let videoURL = URL(fileURLWithPath: filePath)
             playerView.player = AVPlayer(url: videoURL)
         }
+        playerView.player?.preventsDisplaySleepDuringVideoPlayback = true
         let oneSecond = CMTime(value: 1, timescale: 10)
         print(currentItem, item.beginTime, item.endTime, item.comment)
         observerToken = playerView.player?.addBoundaryTimeObserver(forTimes: [NSValue(time: item.endTime.cmtime)], queue: nil) {
@@ -136,6 +137,10 @@ class MainViewController: NSViewController {
         textLabel.invalidateIntrinsicContentSize()
         
         secondsCount = item.playTime.seconds
+        if secondsCount == 0 {
+            secondsCount = Int(item.endTime.timeIntervalSince(item.beginTime))
+        }
+        secondsCount = Int(Float(secondsCount) * playList.playFactor)
         showSecondsCount()
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: onEachSecond(_:))
@@ -155,8 +160,8 @@ class MainViewController: NSViewController {
                 playerView.player?.removeTimeObserver(observerToken)
                 self.observerToken = nil
             }
-            secondsCount = playList!.items[currentItem].pauseTime
-            if secondsCount != 0 {
+            if playList!.items[currentItem].pause {
+                secondsCount = playList!.pauseTime
                 playerView.player?.pause()
                 return
             } else {
@@ -168,6 +173,7 @@ class MainViewController: NSViewController {
         guard currentItem < playList?.items.count ?? 0 else {
             textLabel.stringValue = ""
             timeLabel.stringValue = "End"
+            playerView.player?.preventsDisplaySleepDuringVideoPlayback = false
             return
         }
         playVideo()    // Next video in playlist
