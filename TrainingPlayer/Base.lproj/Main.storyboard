@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.AVKitIBPlugin" version="17701"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -190,7 +189,6 @@
                     </connections>
                 </application>
                 <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="TrainingPlayer" customModuleProvider="target"/>
-                <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="75" y="0.0"/>
@@ -198,8 +196,8 @@
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
             <objects>
-                <windowController id="B8D-0N-5wS" sceneMemberID="viewController">
-                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="MainWindow" animationBehavior="default" id="IQv-IB-iLA">
+                <windowController showSeguePresentationStyle="single" id="B8D-0N-5wS" sceneMemberID="viewController">
+                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="MainWindow" animationBehavior="default" tabbingMode="disallowed" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="196" y="240" width="480" height="270"/>
@@ -224,9 +222,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <avPlayerView controlsStyle="floating" showsFullScreenToggleButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mS3-ft-kem">
-                                <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
-                            </avPlayerView>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Klz-Lr-zB4">
                                 <rect key="frame" x="15" y="215" width="75" height="35"/>
                                 <constraints>
@@ -250,15 +245,8 @@
                                 </textFieldCell>
                             </textField>
                         </subviews>
-                        <constraints>
-                            <constraint firstItem="mS3-ft-kem" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="MV5-av-FY0"/>
-                            <constraint firstAttribute="bottom" secondItem="mS3-ft-kem" secondAttribute="bottom" id="hPc-t9-rdg"/>
-                            <constraint firstAttribute="trailing" secondItem="mS3-ft-kem" secondAttribute="trailing" id="j4w-h6-Gq0"/>
-                            <constraint firstItem="mS3-ft-kem" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="zbV-8Y-iJ3"/>
-                        </constraints>
                     </view>
                     <connections>
-                        <outlet property="playerView" destination="mS3-ft-kem" id="4fH-GU-rnZ"/>
                         <outlet property="textLabel" destination="myP-HP-nXx" id="S5S-9J-ayr"/>
                         <outlet property="timeLabel" destination="Klz-Lr-zB4" id="lSt-tD-Ud7"/>
                         <outlet property="toolbar" destination="9fk-rO-frc" id="9du-L3-ohj"/>

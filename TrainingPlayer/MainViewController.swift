@@ -9,7 +9,7 @@ import Cocoa
 import AVKit
 
 class MainViewController: NSViewController {
-    @IBOutlet weak var playerView: AVPlayerView!
+    var playerView: AVPlayerView = AVPlayerView()
     @IBOutlet var toolbar: NSToolbar!
     @IBOutlet weak var textLabel: NSTextField!
     @IBOutlet weak var timeLabel: NSTextField!
@@ -32,6 +32,12 @@ class MainViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        playerView.controlsStyle = .floating
+        playerView.showsFullScreenToggleButton = true
+        playerView.autoresizingMask = [.width, .height]
+        view.addSubview(playerView)
+        playerView.frame = view.bounds
     }
     
     override func viewDidAppear() {
