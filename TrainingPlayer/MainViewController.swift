@@ -112,13 +112,13 @@ class MainViewController: NSViewController {
         timeLabel.font = .monospacedDigitSystemFont(ofSize: 30, weight: .regular)
         timeLabel.textColor = .white
         timeLabel.stringValue = " "
-        timeLabel.backgroundColor = NSColor.black.withAlphaComponent(0.2)
+        timeLabel.backgroundColor = NSColor.black.withAlphaComponent(0.3)
         timeLabel.isBordered = false
 
         textLabel.font = .systemFont(ofSize: 24, weight: .regular)
         textLabel.textColor = .white
         textLabel.stringValue = " "
-        textLabel.backgroundColor = NSColor.black.withAlphaComponent(0.2)
+        textLabel.backgroundColor = NSColor.black.withAlphaComponent(0.3)
         textLabel.isBordered = false
         timeLabel.removeFromSuperview()
         textLabel.removeFromSuperview()
@@ -145,12 +145,13 @@ class MainViewController: NSViewController {
             playerView.player = AVPlayer(url: videoURL)
         }
         playerView.player?.preventsDisplaySleepDuringVideoPlayback = true
-        let oneSecond = CMTime(value: 1, timescale: 10)
+        let tolerance = CMTime(value: 1, timescale: 10)
         print(currentItem, item.beginTime, item.endTime, item.comment)
         observerToken = playerView.player?.addBoundaryTimeObserver(forTimes: [NSValue(time: item.endTime.cmtime)], queue: nil) {
-            self.playerView.player?.seek(to: item.beginTime.cmtime, toleranceBefore: oneSecond, toleranceAfter: oneSecond)
+            let beginTime = item.beginTime.addingTimeInterval(1)
+            self.playerView.player?.seek(to: beginTime.cmtime, toleranceBefore: tolerance, toleranceAfter: tolerance)
         }
-        self.playerView.player?.seek(to: item.beginTime.cmtime, toleranceBefore: oneSecond, toleranceAfter: oneSecond)
+        self.playerView.player?.seek(to: item.beginTime.cmtime, toleranceBefore: tolerance, toleranceAfter: tolerance)
         self.playerView.player?.rate = 1
         textLabel.stringValue = "\(currentItem+1)/\(playList.items.count): \(item.comment)"
     
@@ -191,6 +192,7 @@ class MainViewController: NSViewController {
         guard currentItem < playList?.items.count ?? 0 else {
             textLabel.stringValue = ""
             timeLabel.stringValue = "End"
+            playerView.player?.pause()
             playerView.player?.preventsDisplaySleepDuringVideoPlayback = false
             return
         }
