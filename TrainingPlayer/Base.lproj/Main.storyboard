@@ -257,24 +257,32 @@
                     <allowedToolbarItems>
                         <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="5Jq-8z-wpa"/>
                         <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="SHp-sY-P1l"/>
-                        <toolbarItem implicitItemIdentifier="A4603D43-1E62-4895-A68A-AB1AFDF5FC8F" label="Start" paletteLabel="Start" tag="-1" image="NSTouchBarPlayTemplate" id="PEx-r5-Y25">
+                        <toolbarItem implicitItemIdentifier="A4603D43-1E62-4895-A68A-AB1AFDF5FC8F" label="Run" paletteLabel="Run" tag="-1" image="NSTouchBarPlayTemplate" id="PEx-r5-Y25">
                             <size key="minSize" width="28.5" height="26"/>
                             <size key="maxSize" width="28.5" height="26"/>
                             <connections>
                                 <action selector="startButtonPress:" target="XfG-lQ-9wD" id="Jyo-qV-caB"/>
                             </connections>
                         </toolbarItem>
-                        <toolbarItem implicitItemIdentifier="9F61DD9E-1A89-4EEF-879C-94107044B0CE" label="Pause" paletteLabel="Pause" tag="-1" image="NSTouchBarPauseTemplate" id="Eer-cx-vvQ">
+                        <toolbarItem implicitItemIdentifier="9F61DD9E-1A89-4EEF-879C-94107044B0CE" label="Pause" paletteLabel="Pause" tag="-1" image="NSTouchBarPlayPauseTemplate" id="Eer-cx-vvQ">
                             <size key="minSize" width="27" height="26"/>
                             <size key="maxSize" width="27" height="26"/>
                             <connections>
                                 <action selector="pauseButtonPress:" target="XfG-lQ-9wD" id="lJo-7Z-OYn"/>
                             </connections>
                         </toolbarItem>
+                        <toolbarItem implicitItemIdentifier="5F0FBFC4-1B43-4445-8BEB-2FF9DFA03455" label="Next" paletteLabel="Next" tag="-1" image="NSTouchBarSkipToEndTemplate" id="2uZ-RS-nQJ">
+                            <size key="minSize" width="37" height="26"/>
+                            <size key="maxSize" width="37" height="26"/>
+                            <connections>
+                                <action selector="nextButtonPress:" target="XfG-lQ-9wD" id="wY7-gq-UIO"/>
+                            </connections>
+                        </toolbarItem>
                     </allowedToolbarItems>
                     <defaultToolbarItems>
                         <toolbarItem reference="PEx-r5-Y25"/>
                         <toolbarItem reference="Eer-cx-vvQ"/>
+                        <toolbarItem reference="2uZ-RS-nQJ"/>
                     </defaultToolbarItems>
                 </toolbar>
             </objects>
@@ -282,7 +290,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="NSTouchBarPauseTemplate" width="11" height="13"/>
+        <image name="NSTouchBarPlayPauseTemplate" width="23" height="13"/>
         <image name="NSTouchBarPlayTemplate" width="12" height="13"/>
+        <image name="NSTouchBarSkipToEndTemplate" width="15" height="13"/>
     </resources>
 </document>

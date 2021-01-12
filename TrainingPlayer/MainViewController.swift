@@ -82,6 +82,15 @@ class MainViewController: NSViewController {
         }
     }
     
+    @IBAction func nextButtonPress(_ sender: Any) {
+        currentItem += 1
+        guard currentItem < playList?.items.count ?? 0 else {
+            endTraining()
+            return
+        }
+        playVideo()    // Next video in playlist
+    }
+
     override func viewWillAppear() {
         view.window?.toolbar = toolbar
     }
@@ -127,8 +136,8 @@ class MainViewController: NSViewController {
         NSLayoutConstraint.activate([
             timeLabel.topAnchor.constraint(equalTo: contentOverlayView.topAnchor, constant: 15),
             timeLabel.leadingAnchor.constraint(equalTo: contentOverlayView.leadingAnchor, constant: 15),
-            textLabel.bottomAnchor.constraint(equalTo: contentOverlayView.bottomAnchor, constant: -15),
-            textLabel.leadingAnchor.constraint(equalTo: contentOverlayView.leadingAnchor, constant: 15),
+            textLabel.topAnchor.constraint(equalTo: contentOverlayView.topAnchor, constant: 15),
+            textLabel.trailingAnchor.constraint(equalTo: contentOverlayView.trailingAnchor, constant: -15),
         ])
     }
 
@@ -190,13 +199,21 @@ class MainViewController: NSViewController {
         }
         currentItem += 1
         guard currentItem < playList?.items.count ?? 0 else {
-            textLabel.stringValue = ""
-            timeLabel.stringValue = "End"
-            playerView.player?.pause()
-            playerView.player?.preventsDisplaySleepDuringVideoPlayback = false
+            endTraining()
             return
         }
         playVideo()    // Next video in playlist
+    }
+
+    private func endTraining() {
+        if let observerToken = observerToken {
+            playerView.player?.removeTimeObserver(observerToken)
+            self.observerToken = nil
+        }
+        textLabel.stringValue = ""
+        timeLabel.stringValue = "End"
+        playerView.player?.pause()
+        playerView.player?.preventsDisplaySleepDuringVideoPlayback = false
     }
     
     private func showSecondsCount() {
